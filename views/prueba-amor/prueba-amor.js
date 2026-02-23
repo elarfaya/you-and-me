@@ -41,7 +41,7 @@ const preguntas = [
     },
     {
         pregunta: "¿Cuál fue nuestra primera película en el cine?",
-        respuesta: "Zootroplis 2",
+        respuesta: "Zootropolis 2",
         premio: "🍿 Noche de cine premium"
     },
     {
