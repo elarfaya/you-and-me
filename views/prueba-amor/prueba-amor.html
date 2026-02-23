@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prueba de Amor</title>
+
+    <link rel="stylesheet" href="../../styles/styles.css">
+    <link rel="stylesheet" href="prueba-amor.css">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Nuestra Historia</h2>
+        <a href="../../index.html">Inicio</a>
+        <a href="../viajes/viajes.html">Viajes</a>
+        <a href="../galeria/galeria.html">Galería</a>
+        <a href="prueba-amor.html" class="active">Prueba de Amor</a>
+    </div>
+
+    <div class="content" style="padding: 0px !important;">
+        <div class="flip-card" id="flipCard">
+            <div class="flip-inner">
+
+                <!-- CARA FRONTAL -->
+                <div class="flip-front">
+                    <h1>💖 Prueba de Amor 💖</h1>
+
+                    <div id="pregunta"></div>
+
+                    <input type="text" id="respuesta" placeholder="Escribe tu respuesta..." />
+                    <button id="responderButton" onclick="comprobarRespuesta()">Responder</button>
+
+                    <div id="mensaje"></div>
+                    <div id="contador"></div>
+                </div>
+
+                <!-- CARA TRASERA -->
+                <div class="flip-back">
+                    <h1>🎉 ¡ACERTADO! 🎉</h1>
+                    <div id="premioTexto" class="premio-texto"></div>
+                    <div id="contadorPremio"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="confeti-container"></div>
+    </div>
+</body>
+
+<script src="prueba-amor.js"></script>
+
+</html>

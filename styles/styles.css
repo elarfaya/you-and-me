@@ -105,4 +105,16 @@ h2 {
   .content {
     margin-left: 0;
   }
+
+  /* Contenedor de preguntas en prueba de amor. */
+  .prueba-container {
+    max-width: 500px;
+    margin: 80px 20px !important;
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial';
+  }
 }
