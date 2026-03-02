@@ -11,7 +11,7 @@ const preguntas = [
     },
     {
         pregunta: "Estoy contigo en lo bueno y lo malo, no soy persona… ¿qué soy?",
-        respuesta: "el amor",
+        respuesta: "El amor",
         premio: "🎬 Ticket válido para elegir película esta semana"
     },
     {
@@ -26,7 +26,7 @@ const preguntas = [
     },
     {
         pregunta: "¿Qué comida nunca nos falla?",
-        respuesta: "pizza",
+        respuesta: "Pizza",
         premio: "🍕 Cena especial a elegir"
     },
     {
@@ -37,7 +37,7 @@ const preguntas = [
     {
         pregunta: "¿Quién conduce mejor?",
         respuesta: "Enrique",
-        premio: "🚗 Copiloto VIP una semana"
+        premio: "🚗 Cita a un evento de coches"
     },
     {
         pregunta: "¿Cuál fue nuestra primera película en el cine?",
@@ -63,6 +63,21 @@ const preguntas = [
         pregunta: "¿Qué serie vimos juntos del tirón?",
         respuesta: "A la fuga",
         premio: "📺 Maratón de serie"
+    },
+    {
+        pregunta: "¿Que día nos conocimos?",
+        respuesta: "15 de mayo",
+        premio: "Escapada durante todo un dia"
+    },
+    {
+        pregunta: "¿Que día conocí a tu hermana?",
+        respuesta: "17 de mayo",
+        premio: "Casa rural fin de semana"
+    },
+    {
+        pregunta: "¿Serie favorita de tu novio?",
+        respuesta: "Supernatural",
+        premio: "Ticket regalo 50€"
     },
 ];
 

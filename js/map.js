@@ -10,7 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-L.marker([42.817459, -1.643278])
+L.marker([LAT, LNG])
   .addTo(map)
   .bindPopup("Aquí empezó todo ❤️")
   .openPopup();

@@ -86,6 +86,11 @@ body {
   width: 100%;
 }
 
+.map {
+  height: 500px;
+  margin-top: 20px;
+}
+
 h1,
 h2 {
   font-family: 'Playfair Display', serif;
@@ -106,15 +111,14 @@ h2 {
     margin-left: 0;
   }
 
-  /* Contenedor de preguntas en prueba de amor. */
-  .prueba-container {
-    max-width: 500px;
-    margin: 80px 20px !important;
-    text-align: center;
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial';
+  .flip-card {
+    height: 380px;
+    margin: 80px 20px;
+    perspective: 1000px;
+  }
+
+  .map {
+    height: 350px;
+    margin-top: 20px;
   }
 }
