@@ -135,6 +135,7 @@ function comprobarRespuesta() {
     } else {
         document.getElementById("mensaje").innerText =
             "Ups… intenta otra vez 😏";
+        document.getElementById("respuesta").value = "";
     }
 }
 
