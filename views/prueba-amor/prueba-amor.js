@@ -1,117 +1,113 @@
-const preguntas = [
-    {
-        pregunta: "¿Dónde fue nuestra primera escapada?",
-        respuesta: "Eugi",
-        premio: "🎟️ Ticket válido por un masaje relajante"
-    },
-    {
-        pregunta: "¿Quién dijo 'te quiero' primero?",
-        respuesta: "Maite",
-        premio: "🌹 Ticket válido por un ramo de flores"
-    },
-    {
-        pregunta: "Estoy contigo en lo bueno y lo malo, no soy persona… ¿qué soy?",
-        respuesta: "El amor",
-        premio: "🎬 Ticket válido para elegir película esta semana"
-    },
-    {
-        pregunta: "¿Quién se enamoró primero?",
-        respuesta: "Maite",
-        premio: "🍫 Vale por tu chocolate favorito"
-    },
-    {
-        pregunta: "¿Quién es más cabezota?",
-        respuesta: "Maite",
-        premio: "😌 Vale por elegir restaurante"
-    },
-    {
-        pregunta: "¿Qué comida nunca nos falla?",
-        respuesta: "Pizza",
-        premio: "🍕 Cena especial a elegir"
-    },
-    {
-        pregunta: "¿Qué día celebramos nuestro aniversario?",
-        respuesta: "25 de junio",
-        premio: "🥂 Brindis romántico"
-    },
-    {
-        pregunta: "¿Quién conduce mejor?",
-        respuesta: "Enrique",
-        premio: "🚗 Cita a un evento de coches"
-    },
-    {
-        pregunta: "¿Cuál fue nuestra primera película en el cine?",
-        respuesta: "Zootropolis 2",
-        premio: "🍿 Noche de cine premium"
-    },
-    {
-        pregunta: "¿Quién se queda dormido antes?",
-        respuesta: "Maite",
-        premio: "🌙 Masaje nocturno"
-    },
-    {
-        pregunta: "¿Dónde fue nuestro primer beso?",
-        respuesta: "Sarasate",
-        premio: "💋 Beso sorpresa"
-    },
-    {
-        pregunta: "¿Quién ronca más?",
-        respuesta: "Maite",
-        premio: "😂 Desayuno en la cama"
-    },
-    {
-        pregunta: "¿Qué serie vimos juntos del tirón?",
-        respuesta: "A la fuga",
-        premio: "📺 Maratón de serie"
-    },
-    {
-        pregunta: "¿Que día nos conocimos?",
-        respuesta: "15 de mayo",
-        premio: "Escapada durante todo un dia"
-    },
-    {
-        pregunta: "¿Que día conocí a tu hermana?",
-        respuesta: "17 de mayo",
-        premio: "Casa rural fin de semana"
-    },
-    {
-        pregunta: "¿Serie favorita de tu novio?",
-        respuesta: "Supernatural",
-        premio: "Ticket regalo 50€"
-    },
-];
-
+let preguntas = [];
 let preguntaActual;
 
-function cargarPregunta() {
-    const bloqueadoHasta = localStorage.getItem("bloqueadoHasta");
-    let usadas = JSON.parse(localStorage.getItem("preguntasUsadas")) || [];
+const API_URL = "https://script.google.com/macros/s/AKfycbyQbj60mby-mnObvO2h02nCbnXiK2COSdmSQOmrq1E6czq7CEazG_zIvjz9sge6J50-wQ/exec";
 
-    // 🚫 Si ya se completaron todas
-    if (usadas.length === preguntas.length) {
+async function cargarPreguntas() {
+    try {
+        const response = await fetch(API_URL);
+        preguntas = await response.json();
+
+        cargarPregunta();
+    } catch (error) {
+        console.error(error);
+        document.getElementById("mensaje").innerText =
+            "Error al cargar las preguntas 😢";
+    }
+}
+
+function cargarPregunta() {
+
+    console.log("Preguntas:", preguntas);
+
+    const completadas = preguntas.filter(
+        p => String(p.completada).trim().toUpperCase() === "SI"
+            && p.fecha_acierto
+    );
+
+    console.log("Completadas:", completadas);
+
+    if (completadas.length > 0) {
+
+        const ultima = completadas.sort(
+            (a, b) =>
+                new Date(b.fecha_acierto) -
+                new Date(a.fecha_acierto)
+        )[0];
+
+        const fechaAcierto =
+            new Date(ultima.fecha_acierto);
+
+        const desbloqueo =
+            fechaAcierto.getTime() +
+            (24 * 60 * 60 * 1000);
+        console.log("Fecha acierto:", fechaAcierto);
+        console.log("Desbloqueo:", new Date(desbloqueo));
+        console.log("Ahora:", new Date());
+        console.log("Bloqueado:", Date.now() < desbloqueo);
+        if (Date.now() < desbloqueo) {
+
+            document.getElementById("pregunta").innerText =
+                "⏳ La siguiente prueba estará disponible en:";
+
+            document.getElementById("respuesta").style.display = "none";
+            document.getElementById("responderButton").style.display = "none";
+
+            iniciarContador(desbloqueo);
+
+            return;
+        }
+    }
+
+    const pendiente = preguntas.find(
+        p => String(p.completada).trim().toUpperCase() !== "SI"
+    );
+
+    if (!pendiente) {
         mostrarFinal();
         return;
     }
 
-    // ⏳ Si está bloqueado por 24h
-    if (bloqueadoHasta && Date.now() < bloqueadoHasta) {
-        mostrarPremioBloqueado(bloqueadoHasta);
-        return;
-    }
+    preguntaActual = pendiente;
 
-    // Filtrar preguntas disponibles
-    const disponibles = preguntas
-        .map((p, index) => ({ ...p, index }))
-        .filter(p => !usadas.includes(p.index));
+    document.getElementById("pregunta").innerText =
+        preguntaActual.pregunta;
 
-    const seleccion = disponibles[Math.floor(Math.random() * disponibles.length)];
+    document.getElementById("respuesta").value = "";
+}
 
-    preguntaActual = seleccion;
+function iniciarContador(fechaDesbloqueo) {
 
-    document.getElementById("pregunta").innerText = preguntaActual.pregunta;
+    const contador =
+        document.getElementById("contador");
+
+    setInterval(() => {
+
+        const restante =
+            fechaDesbloqueo - Date.now();
+
+        if (restante <= 0) {
+            location.reload();
+            return;
+        }
+
+        const horas =
+            Math.floor(restante / (1000 * 60 * 60));
+
+        const minutos =
+            Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60));
+
+        const segundos =
+            Math.floor((restante % (1000 * 60)) / 1000);
+
+        contador.innerText =
+            `${horas}h ${minutos}m ${segundos}s`;
+
+    }, 1000);
 }
 
 function mostrarFinal() {
+
     document.getElementById("pregunta").innerText =
         "💖 Has completado todas las Pruebas de Amor 💖";
 
@@ -123,61 +119,79 @@ function mostrarFinal() {
 }
 
 function comprobarRespuesta() {
-    const input = document.getElementById("respuesta").value.trim();
 
-    if (input === preguntaActual.respuesta) {
+    const input = document
+        .getElementById("respuesta")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const respuestaCorrecta = preguntaActual.respuesta
+        .trim()
+        .toLowerCase();
+
+    if (input === respuestaCorrecta) {
         acertado();
     } else {
-        document.getElementById("mensaje").innerText = "Ups… intenta otra vez 😏";
+        document.getElementById("mensaje").innerText =
+            "Ups… intenta otra vez 😏";
     }
 }
 
-function acertado() {
-    lanzarCorazones();
+const SHEETDB_URL = "https://sheetdb.io/api/v1/8c485wkudvpbd";
 
-    const tiempoBloqueo = Date.now() + 24 * 60 * 60 * 1000;
-    localStorage.setItem("bloqueadoHasta", tiempoBloqueo);
-    localStorage.setItem("ultimoPremio", preguntaActual.premio);
+async function marcarCompletada() {
 
-    let usadas = JSON.parse(localStorage.getItem("preguntasUsadas")) || [];
-    usadas.push(preguntaActual.index);
-    localStorage.setItem("preguntasUsadas", JSON.stringify(usadas))
-
-    mostrarPremioBloqueado(tiempoBloqueo);
-}
-
-function mostrarPremioBloqueado(tiempoFinal) {
-    const premio = localStorage.getItem("ultimoPremio");
-    if (premio) {
-        document.getElementById("premioTexto").innerText = premio;
-    }
-
-    document.getElementById("flipCard").classList.add("girada");
-    iniciarContador(tiempoFinal);
-}
-
-function iniciarContador(tiempoFinal) {
-    const contador = document.getElementById("contadorPremio");
-
-    setInterval(() => {
-        const restante = tiempoFinal - Date.now();
-
-        if (restante <= 0) {
-            localStorage.removeItem("bloqueadoHasta");
-            location.reload();
+    const response = await fetch(
+        `${SHEETDB_URL}/id/${preguntaActual.id}`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                data: {
+                    completada: "SI",
+                    fecha_acierto: new Date().toISOString()
+                }
+            })
         }
+    );
 
-        const horas = Math.floor(restante / (1000 * 60 * 60));
-        const minutos = Math.floor((restante % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((restante % (1000 * 60)) / 1000);
+    const resultado = await response.json();
 
-        contador.innerText = `Nueva prueba en ${horas}h ${minutos}m ${segundos}s`;
-    }, 1000);
+    console.log(resultado);
+}
+
+async function acertado() {
+
+    try {
+
+        await marcarCompletada();
+
+        lanzarCorazones();
+
+        document.getElementById("premioTexto").innerText =
+            preguntaActual.premio;
+
+        document.getElementById("flipCard")
+            .classList.add("girada");
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("mensaje").innerText =
+            "Error guardando el progreso 😢";
+    }
 }
 
 function lanzarCorazones() {
+
     for (let i = 0; i < 40; i++) {
+
         const heart = document.createElement("div");
+
         heart.innerHTML = "💖";
         heart.style.position = "fixed";
         heart.style.top = "-20px";
@@ -185,7 +199,8 @@ function lanzarCorazones() {
         heart.style.fontSize = 16 + Math.random() * 20 + "px";
         heart.style.zIndex = "9999";
         heart.style.pointerEvents = "none";
-        heart.style.animation = `caer ${2 + Math.random() * 2}s linear forwards`;
+        heart.style.animation =
+            `caer ${2 + Math.random() * 2}s linear forwards`;
 
         document.body.appendChild(heart);
 
@@ -195,4 +210,4 @@ function lanzarCorazones() {
     }
 }
 
-cargarPregunta();
+cargarPreguntas();
